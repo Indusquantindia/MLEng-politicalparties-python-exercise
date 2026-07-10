@@ -1,0 +1,99 @@
+================================================================================
+MLENG POLITICAL PARTIES PYTHON EXERCISE - SETUP & TEST COMMANDS
+================================================================================
+
+SETUP - Run these once to prepare the environment:
+================================================================================
+
+# Navigate to project directory
+cd c:\Users\pc\projects\MLEng-politicalparties-python-exercise
+
+# Create virtual environment (if not already created)
+C:/Users/pc/AppData/Roaming/uv/python/cpython-3.14.3-windows-x86_64-none/python.exe -m venv .venv
+
+# Activate virtual environment
+.venv\Scripts\activate
+
+# Install pytest and test dependencies
+.venv\Scripts\python.exe -m pip install pytest pytest-mock -q --break-system-packages
+
+# Install core ML/data packages
+.venv\Scripts\python.exe -m pip install pandas scikit-learn xgboost requests fastapi uvicorn streamlit -q --break-system-packages --no-deps
+
+
+TESTING - Run these to verify the code works:
+================================================================================
+
+# Run all unit tests
+.venv\Scripts\python.exe -m pytest tests/test_data_loader.py -v
+
+# Run unit tests with short traceback
+.venv\Scripts\python.exe -m pytest tests/test_data_loader.py -v --tb=short
+
+# Run prediction test (demonstrates the model)
+.venv\Scripts\python.exe test_predictions.py
+
+# Run all tests together
+.venv\Scripts\python.exe -m pytest tests/ -v
+
+
+QUICK VERIFICATION - Single commands to test key functionality:
+================================================================================
+
+# Test that DataLoader loads data correctly
+.venv\Scripts\python.exe -c "import sys; sys.path.insert(0, 'src'); from text_loader.loader import DataLoader; loader = DataLoader(filepath='data/Tweets.csv'); print(f'Data loaded: {loader.data.shape[0]} tweets'); print(f'Cleaned sample: {loader.clean_text(\"Hello@World123!!!\")}')"
+
+# Test text cleaning
+.venv\Scripts\python.exe -c "import sys; sys.path.insert(0, 'src'); from text_loader.loader import DataLoader; result = DataLoader.remove_characters('test123!!!'); print(f'Cleaned: {result}')"
+
+# Verify all dependencies
+.venv\Scripts\python.exe -m pip list | find "pandas" && .venv\Scripts\python.exe -m pip list | find "pytest"
+
+
+RUNNING SERVICES (for Docker Compose deployment):
+================================================================================
+
+# Build and run services
+cd src
+docker-compose build
+
+# Start services in foreground
+docker-compose up
+
+# Start services in background
+docker-compose up -d
+
+# Stop services
+docker-compose down
+
+# View service logs
+docker-compose logs -f
+
+# Access services:
+#   - Streamlit app: http://localhost:8501
+#   - Model API: http://localhost:8000
+#   - API docs: http://localhost:8000/docs
+
+
+CLEANUP:
+================================================================================
+
+# Deactivate virtual environment
+deactivate
+
+# Remove virtual environment (to start fresh)
+rmdir /s .venv
+
+# Clean Python cache files
+py -3 -B -c "import shutil; shutil.rmtree('.pytest_cache', ignore_errors=True); shutil.rmtree('__pycache__', ignore_errors=True)"
+
+
+QUICK START SEQUENCE (copy-paste these in order):
+================================================================================
+
+cd c:\Users\pc\projects\MLEng-politicalparties-python-exercise
+.venv\Scripts\activate
+.venv\Scripts\python.exe -m pytest tests/test_data_loader.py -v
+.venv\Scripts\python.exe test_predictions.py
+
+================================================================================

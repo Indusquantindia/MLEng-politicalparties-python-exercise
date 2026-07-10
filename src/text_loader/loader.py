@@ -1,5 +1,4 @@
 import pandas as pd
-import string
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
@@ -13,17 +12,20 @@ class DataLoader:
 
     def load_data(self):
         """Loads data from a CSV file."""
-        return pd.read_csv(self.filepath)
+        self.data = pd.read_csv(self.filepath)
+        return self.data
 
     @staticmethod
     def remove_characters(text: str) -> str:
-        """Remove non-letters from a given string"""
-        remove_chars = string.punctuation
-        translator = str.maketrans('', '', remove_chars)
-        return text.translate(translator)
+        """Remove non-letter characters from a given string."""
+        if text is None:
+            return ""
+        text = str(text)
+        text = re.sub(r'https?://\S+', '', text)
+        return re.sub(r'[^A-Za-z]+', '', text)
 
     def clean_text(self, text: str) -> str:
-        """Keep only retain words in a given string"""
+        """Keep only letters in a given string."""
         text = self.remove_characters(text)
         return text.strip()
 
